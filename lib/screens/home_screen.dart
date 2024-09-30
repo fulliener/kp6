@@ -2,8 +2,18 @@ import 'package:flutter/material.dart';
 import '../models/item.dart';
 import '../widgets/item_card.dart';
 import 'item_detail_screen.dart';
+import 'add_item_screen.dart';
 
-class HomeScreen extends StatelessWidget {
+class HomeScreen extends StatefulWidget {
+  final VoidCallback onThemeChange;
+
+  HomeScreen({Key? key, required this.onThemeChange}) : super(key: key);
+
+  @override
+  _HomeScreenState createState() => _HomeScreenState();
+}
+
+class _HomeScreenState extends State<HomeScreen> {
   final List<Item> items = [
     Item(
       id: '1',
@@ -39,9 +49,39 @@ class HomeScreen extends StatelessWidget {
     ),
   ];
 
-  final VoidCallback onThemeChange;
+  // Удаление товара с подтверждением
+  void _deleteItem(BuildContext context, Item item) async {
+    final bool confirm = await showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('Удалить товар?'),
+        content: Text('Вы уверены, что хотите удалить "${item.name}"?'),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(false),
+            child: const Text('Нет'),
+          ),
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(true),
+            child: const Text('Да'),
+          ),
+        ],
+      ),
+    );
 
-  HomeScreen({Key? key, required this.onThemeChange}) : super(key: key);
+    if (confirm) {
+      setState(() {
+        items.remove(item);  // Удаление товара
+      });
+    }
+  }
+
+  // Метод для добавления нового товара
+  void _addItem(Item item) {
+    setState(() {
+      items.add(item);
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -51,7 +91,7 @@ class HomeScreen extends StatelessWidget {
         actions: [
           IconButton(
             icon: const Icon(Icons.brightness_6),
-            onPressed: onThemeChange,
+            onPressed: widget.onThemeChange,
           ),
         ],
       ),
@@ -68,8 +108,20 @@ class HomeScreen extends StatelessWidget {
                 ),
               );
             },
+            onDelete: () => _deleteItem(context, items[index]),
           );
         },
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => AddItemScreen(onAddItem: _addItem),
+            ),
+          );
+        },
+        child: const Icon(Icons.add),
       ),
     );
   }
