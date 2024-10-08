@@ -3,14 +3,12 @@ import '../models/item.dart';
 
 class ItemCard extends StatelessWidget {
   final Item item;
-  final VoidCallback onTap;
-  final VoidCallback onDelete;
+  final VoidCallback? onTap;
 
   const ItemCard({
     Key? key,
     required this.item,
     required this.onTap,
-    required this.onDelete,
   }) : super(key: key);
 
   @override
@@ -43,6 +41,8 @@ class ItemCard extends StatelessWidget {
                       fontSize: 18,
                       fontWeight: FontWeight.bold,
                     ),
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
                   ),
                   const SizedBox(height: 4),
                   Text(
@@ -51,18 +51,19 @@ class ItemCard extends StatelessWidget {
                       fontSize: 14,
                       color: Colors.grey,
                     ),
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
                   ),
                 ],
               ),
             ),
           ),
-          // Positioned для кнопки удаления (еще ближе к нижнему левому углу)
-          Positioned(
-            right: 60,  // Еще больше отодвигаем от правого края
-            bottom: 0,  // Кнопка расположена максимально близко к нижнему краю
-            child: IconButton(
-              icon: const Icon(Icons.delete, color: Colors.grey),
-              onPressed: onDelete,  // Кнопка для удаления
+          const Positioned(
+            right: 16,
+            top: 16,
+            child: Row(
+              children: [
+              ],
             ),
           ),
         ],
