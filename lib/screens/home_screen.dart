@@ -5,6 +5,7 @@ import 'item_detail_screen.dart';
 import 'add_item_screen.dart';
 import 'favorites_screen.dart';
 import 'profile_screen.dart';
+import '../widgets/bottom_navigation_bar.dart';
 
 class HomeScreen extends StatefulWidget {
   final VoidCallback onThemeChange;
@@ -23,8 +24,7 @@ class _HomeScreenState extends State<HomeScreen> {
       brand: 'Balenciaga',
       imagePath: 'assets/images/3xl.jpg',
       price: 1000.0,
-      description:
-      'Balenciaga 3XL Extreme Lace — это воплощение дерзкого и экстравагантного стиля.',
+      description: 'Balenciaga 3XL Extreme Lace — это воплощение дерзкого и экстравагантного стиля.',
     ),
     Item(
       id: '2',
@@ -32,8 +32,7 @@ class _HomeScreenState extends State<HomeScreen> {
       brand: 'New Rock',
       imagePath: 'assets/images/nr.jpg',
       price: 300.0,
-      description:
-      'New Rock M-120N-S24 White — это сочетание дерзости и брутального стиля.',
+      description: 'New Rock M-120N-S24 White — это сочетание дерзости и брутального стиля.',
     ),
     Item(
       id: '3',
@@ -41,8 +40,7 @@ class _HomeScreenState extends State<HomeScreen> {
       brand: 'Rick Owens x Dr Martens',
       imagePath: 'assets/images/1460.jpg',
       price: 500.0,
-      description:
-      'Rick Owens Dr. Martens 1460 Pentagram Boots — это смелая интерпретация классики.',
+      description: 'Rick Owens Dr. Martens 1460 Pentagram Boots — это смелая интерпретация классики.',
     ),
     Item(
       id: '4',
@@ -50,149 +48,123 @@ class _HomeScreenState extends State<HomeScreen> {
       brand: 'Rick Owens',
       imagePath: 'assets/images/ramones.jpg',
       price: 350.0,
-      description:
-      'Rick Owens DRKSHDW Ramones — это сочетание панк-эстетики и высокой моды.',
+      description: 'Rick Owens DRKSHDW Ramones — это сочетание панк-эстетики и высокой моды.',
     ),
   ];
 
-  // Хранение избранных товаров
   final List<Item> favorites = [];
+  int _currentIndex = 0;
 
-  // Удаление товара с подтверждением
-  void _deleteItem(BuildContext context, Item item) async {
-    final bool confirm = await showDialog(
-      context: context,
-      builder: (context) => AlertDialog(
-        title: const Text('Удалить товар?'),
-        content: Text('Вы уверены, что хотите удалить "${item.name}"?'),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.of(context).pop(false),
-            child: const Text('Нет'),
-          ),
-          TextButton(
-            onPressed: () => Navigator.of(context).pop(true),
-            child: const Text('Да'),
-          ),
-        ],
-      ),
-    );
-
-    if (confirm) {
-      setState(() {
-        items.remove(item); // Удаление товара
-      });
-    }
-  }
-
-  // Метод для добавления нового товара
-  void _addItem(Item item) {
-    setState(() {
-      items.add(item);
-    });
-  }
-
-  // Метод для добавления/удаления товара в/из избранных
   void _toggleFavorite(Item item) {
     setState(() {
       if (favorites.contains(item)) {
-        favorites.remove(item); // Удаляем из избранного
+        favorites.remove(item);
       } else {
-        favorites.add(item); // Добавляем в избранное
+        favorites.add(item);
       }
+    });
+  }
+
+  void _onBottomNavTap(int index) {
+    setState(() {
+      _currentIndex = index;
+    });
+  }
+
+  void _deleteItem(Item item) {
+    setState(() {
+      items.remove(item); // Удаление товара
+      favorites.remove(item); // Удаление из избранного, если он там есть
     });
   }
 
   @override
   Widget build(BuildContext context) {
+    Widget currentScreen;
+
+    switch (_currentIndex) {
+      case 0:
+        currentScreen = Scaffold(
+          appBar: AppBar(
+            title: const Text('FullienWear'),
+            actions: [
+              IconButton(
+                icon: const Icon(Icons.add),
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => AddItemScreen(onAddItem: (item) {
+                        setState(() {
+                          items.add(item);
+                        });
+                      }),
+                    ),
+                  );
+                },
+              ),
+              IconButton(
+                icon: const Icon(Icons.brightness_6),
+                onPressed: widget.onThemeChange,
+              ),
+            ],
+          ),
+          body: GridView.builder(
+            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+              crossAxisCount: 2,
+              crossAxisSpacing: 8.0,
+              mainAxisSpacing: 8.0,
+              childAspectRatio: 0.75,
+            ),
+            itemCount: items.length,
+            itemBuilder: (context, index) {
+              return ItemCard(
+                item: items[index],
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => ItemDetailScreen(
+                        item: items[index],
+                        isFavorite: favorites.contains(items[index]),
+                        onDelete: () {
+                          _deleteItem(items[index]);
+                          Navigator.of(context).pop();
+                        },
+                        onFavoriteToggle: () {
+                          _toggleFavorite(items[index]);
+                          setState(() {});
+                        },
+                      ),
+                    ),
+                  );
+                },
+              );
+            },
+          ),
+        );
+        break;
+      case 1:
+        currentScreen = FavoritesScreen(
+          favorites: favorites,
+          onFavoriteToggle: _toggleFavorite,
+        );
+        break;
+      case 2:
+        currentScreen = ProfileScreen();
+        break;
+      default:
+        currentScreen = Container(); // Пустой контейнер для защиты от ошибок
+    }
+
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('FullienWear'),
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.add), // Кнопка добавления товара
-            onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => AddItemScreen(onAddItem: _addItem),
-                ),
-              );
-            },
-          ),
-          IconButton(
-            icon: const Icon(Icons.brightness_6),
-            onPressed: widget.onThemeChange,
-          ),
-        ],
-      ),
-      body: GridView.builder(
-        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-          crossAxisCount: 2, // Количество колонок
-          crossAxisSpacing: 8.0, // Промежутки между колонками
-          mainAxisSpacing: 8.0, // Промежутки между строками
-          childAspectRatio: 0.75, // Соотношение ширины и высоты элементов
-        ),
-        itemCount: items.length,
-        itemBuilder: (context, index) {
-          return ItemCard(
-            item: items[index],
-            onTap: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => ItemDetailScreen(
-                      item: items[index],
-                      onDelete: () {
-                        _deleteItem(context, items[index]);
-                      },
-                      isFavorite: favorites.contains(items[index]), // Убедись, что этот параметр передан
-                      onFavoriteToggle: () {
-                        _toggleFavorite(items[index]);
-                        setState(() {});
-                      }
-                  ),
-                ),
-              );
-            },
-          );
-        },
-      ),
-      bottomNavigationBar: BottomNavigationBar(
-        items: const [
-          BottomNavigationBarItem(
-            icon: Icon(Icons.home),
-            label: 'Каталог',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.favorite),
-            label: 'Избранное',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.person),
-            label: 'Профиль',
-          ),
-        ],
+      body: currentScreen,
+      bottomNavigationBar: BottomNavBar(
+        currentIndex: _currentIndex,
         onTap: (index) {
-          if (index == 1) {
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) => FavoritesScreen(
-                  favorites: favorites, // Передаем список избранных
-                  onFavoriteToggle: _toggleFavorite, // Передаем функцию для изменения избранного
-                ),
-              ),
-            );
-          } else if (index == 2) {
-            // Исправлено: теперь открывается ProfileScreen вместо FavoritesScreen
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) => ProfileScreen(), // Открываем экран профиля
-              ),
-            );
-          }
+          setState(() {
+            _currentIndex = index;
+          });
         },
       ),
     );

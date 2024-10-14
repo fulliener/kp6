@@ -20,12 +20,12 @@ class ItemDetailScreen extends StatefulWidget {
 }
 
 class _ItemDetailScreenState extends State<ItemDetailScreen> {
-  late bool isFavorite; // Изменяем на late, чтобы инициализировать в initState
+  late bool isFavorite;
 
   @override
   void initState() {
     super.initState();
-    isFavorite = widget.isFavorite; // Устанавливаем начальное состояние isFavorite
+    isFavorite = widget.isFavorite;
   }
 
   @override
@@ -98,8 +98,7 @@ class _ItemDetailScreenState extends State<ItemDetailScreen> {
                   ),
                 );
                 if (confirm) {
-                  widget.onDelete();  // Вызов удаления
-                  Navigator.pop(context);  // Возврат на предыдущий экран после удаления
+                  widget.onDelete();  // Удаляем элемент
                 }
               },
             ),
@@ -115,9 +114,9 @@ class _ItemDetailScreenState extends State<ItemDetailScreen> {
               ),
               onPressed: () {
                 setState(() {
-                  isFavorite = !isFavorite; // Обновляем локальное состояние
+                  isFavorite = !isFavorite;
                 });
-                widget.onFavoriteToggle(); // Сообщаем HomeScreen об изменении избранного
+                widget.onFavoriteToggle();
               },
             ),
           ),

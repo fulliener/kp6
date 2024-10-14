@@ -5,10 +5,10 @@ class ProfileScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Профиль'),
+        title: const Text('Профиль'), // Заголовок для экрана профиля
       ),
       body: const Center(
-        child: Text('Здесь будет профиль пользователя.'),
+        child: Text('Это профиль пользователя.'),
       ),
     );
   }
