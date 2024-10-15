@@ -1,7 +1,7 @@
 {
     "logs": [
         {
-            "outputFile": "com.example.prak3.app-mergeDebugResources-24:/values/values.xml",
+            "outputFile": "com.example.prak3.app-mergeDebugResources-26:/values/values.xml",
             "map": [
                 {
                     "source": "C:\\Users\\user\\.gradle\\caches\\transforms-3\\3e4063b07db37bd08626b21245b0f82d\\transformed\\jetified-activity-1.8.1\\res\\values\\values.xml",

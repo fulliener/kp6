@@ -13,7 +13,8 @@ class BottomNavBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BottomNavigationBar(
-      currentIndex: currentIndex, // Активная вкладка
+      type: BottomNavigationBarType.fixed,  // Устанавливает фиксированный тип без анимаций
+      currentIndex: currentIndex,
       items: const [
         BottomNavigationBarItem(
           icon: Icon(Icons.home),
@@ -24,11 +25,15 @@ class BottomNavBar extends StatelessWidget {
           label: 'Избранное',
         ),
         BottomNavigationBarItem(
+          icon: Icon(Icons.shopping_cart),
+          label: 'Корзина',
+        ),
+        BottomNavigationBarItem(
           icon: Icon(Icons.person),
           label: 'Профиль',
         ),
       ],
-      onTap: onTap, // Обработка нажатия
+      onTap: onTap,
     );
   }
 }

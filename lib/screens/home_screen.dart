@@ -6,6 +6,7 @@ import 'add_item_screen.dart';
 import 'favorites_screen.dart';
 import 'profile_screen.dart';
 import '../widgets/bottom_navigation_bar.dart';
+import 'cart_screen.dart';
 
 class HomeScreen extends StatefulWidget {
   final VoidCallback onThemeChange;
@@ -53,6 +54,7 @@ class _HomeScreenState extends State<HomeScreen> {
   ];
 
   final List<Item> favorites = [];
+  final List<Item> cartItems = [];
   int _currentIndex = 0;
 
   void _toggleFavorite(Item item) {
@@ -62,6 +64,12 @@ class _HomeScreenState extends State<HomeScreen> {
       } else {
         favorites.add(item);
       }
+    });
+  }
+
+  void _addToCart(Item item) {
+    setState(() {
+      cartItems.add(item);
     });
   }
 
@@ -75,6 +83,7 @@ class _HomeScreenState extends State<HomeScreen> {
     setState(() {
       items.remove(item); // Удаление товара
       favorites.remove(item); // Удаление из избранного, если он там есть
+      cartItems.remove(item);
     });
   }
 
@@ -135,6 +144,9 @@ class _HomeScreenState extends State<HomeScreen> {
                           _toggleFavorite(items[index]);
                           setState(() {});
                         },
+                        onAddToCart: () {
+                          _addToCart(items[index]); // Добавляем в корзину
+                        },
                       ),
                     ),
                   );
@@ -144,13 +156,16 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
         );
         break;
-      case 1:
+      case 1: // Избранное
         currentScreen = FavoritesScreen(
           favorites: favorites,
           onFavoriteToggle: _toggleFavorite,
         );
         break;
-      case 2:
+      case 2: // Корзина
+        currentScreen = CartScreen(cartItems: cartItems); // Экран корзины
+        break;
+      case 3: // Профиль
         currentScreen = ProfileScreen();
         break;
       default:

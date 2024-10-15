@@ -47,6 +47,14 @@ class FavoritesScreen extends StatelessWidget {
                       onFavoriteToggle(item);
                     },
                     onDelete: () {},
+                    onAddToCart: () {
+                      // Логика добавления в корзину
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          content: Text('${item.name} добавлен в корзину'),
+                        ),
+                      );
+                    },
                   ),
                 ),
               );

@@ -1,7 +1,7 @@
 {
     "logs": [
         {
-            "outputFile": "com.example.prak3.app-mergeDebugResources-24:/values-night-v8/values-night-v8.xml",
+            "outputFile": "com.example.prak3.app-mergeDebugResources-26:/values-night-v8/values-night-v8.xml",
             "map": [
                 {
                     "source": "D:\\fluttersrc\\prak3\\android\\app\\src\\main\\res\\values-night\\styles.xml",

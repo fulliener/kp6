@@ -6,6 +6,7 @@ class ItemDetailScreen extends StatefulWidget {
   final VoidCallback onDelete;
   final bool isFavorite;
   final VoidCallback onFavoriteToggle;
+  final VoidCallback onAddToCart;
 
   const ItemDetailScreen({
     Key? key,
@@ -13,6 +14,7 @@ class ItemDetailScreen extends StatefulWidget {
     required this.onDelete,
     required this.isFavorite,
     required this.onFavoriteToggle,
+    required this.onAddToCart,
   }) : super(key: key);
 
   @override
@@ -70,6 +72,20 @@ class _ItemDetailScreenState extends State<ItemDetailScreen> {
                     fontSize: 16,
                   ),
                 ),
+                const Spacer(), // Заполняет оставшееся пространство
+                // Кнопка "Добавить в корзину" по центру
+                Center(
+                  child: ElevatedButton(
+                    onPressed: () {
+                      widget.onAddToCart(); // Вызов функции добавления в корзину
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(content: Text('${widget.item.name} добавлен в корзину!')),
+                      );
+                    },
+                    child: const Text('Добавить в корзину'),
+                  ),
+                ),
+                const SizedBox(height: 16), // Добавляем немного отступа снизу
               ],
             ),
           ),
