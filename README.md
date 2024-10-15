@@ -2,8 +2,8 @@
 
 # Акперов Руслан ЭФБО-04-22
 
-#ПР5
+#ПР6
 
-https://github.com/user-attachments/assets/d9308a78-9abb-45bf-a8df-12909eb1eaa6
 
+https://github.com/user-attachments/assets/e409c502-22ea-4a97-a968-24e55223b5b3
 
